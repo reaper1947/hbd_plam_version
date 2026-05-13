@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Special Surprise</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      animation: fadeIn 2s ease;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #1e3c72;
+      margin-top: 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: #1e3c72;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #2a5298;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Popup overlay */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      z-index: 999;
+      animation: explode 0.8s ease-out forwards;
+      overflow: hidden;
+    }
+
+    @keyframes explode {
+      from { transform: scale(0.1); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup img {
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+      animation: bounceIn 1s ease, floatMove 6s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes floatMove {
+      0% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(20px, -15px) scale(1.05); }
+      50% { transform: translate(-15px, 25px) scale(0.95); }
+      75% { transform: translate(15px, -20px) scale(1.02); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: #ff4e50;
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      padding: 8px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+      transition: 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #fc913a;
+      transform: scale(1.1);
+    }
+
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      color: #fff;
+      font-size: 2.5rem;
+      animation: floatUp 3s ease-in forwards;
+      z-index: 1001;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(-800px) scale(1.5) rotate(20deg); opacity: 0; }
+    }
+
+    .love-text {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      font-weight: bold;
+      animation: fadeIn 2s ease;
+      z-index: 1002;
+      text-shadow: 0 2px 10px rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✨ A Special Surprise ✨</h1>
+    <p>
+      For you!<br>
+      Sit back and enjoy the universe.<br>
+      You are out of this world! 🚀
+    </p>
+    <button class="btn" onclick="showSurprise()">Click Me 🌌</button>
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+  <audio id="bg-music" loop>
+    <source src="music/universe.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    function showSurprise() {
+      const popup = document.createElement("div");
+      popup.className = "popup";
+
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "close-btn";
+      closeBtn.innerText = "✖";
+      closeBtn.onclick = () => {
+        popup.remove();
+        document.getElementById("bg-music").pause();
+        document.getElementById("bg-music").currentTime = 0;
+      };
+      popup.appendChild(closeBtn);
+
+      const imgContainer = document.createElement("div");
+      popup.appendChild(imgContainer);
+
+      const totalImages = 10;
+      let currentBatch = 0;
+      const batchSize = 5;
+
+      function showBatch() {
+        if (!document.body.contains(popup)) return;
+        imgContainer.innerHTML = "";
+        for (let i = 0; i < batchSize; i++) {
+          const index = (currentBatch * batchSize + i) % totalImages + 1;
+          const img = document.createElement("img");
+          img.src = `img/photo${index}.jpg`;
+          img.style.top = Math.random() * 60 + 10 + "%";
+          img.style.left = Math.random() * 60 + 10 + "%";
+          img.style.animationDuration = (6 + Math.random() * 6) + "s";
+          img.style.animationDelay = (Math.random() * 3) + "s";
+          imgContainer.appendChild(img);
+        }
+        currentBatch++;
+      }
+
+      showBatch();
+      const batchInterval = setInterval(showBatch, 4000);
+
+      const loveText = document.createElement("div");
+      loveText.className = "love-text";
+      loveText.innerText = "✨ You are my Universe ✨";
+      popup.appendChild(loveText);
+
+      document.body.appendChild(popup);
+
+      const heartInterval = setInterval(() => {
+        if (!document.body.contains(popup)) {
+          clearInterval(heartInterval);
+          clearInterval(batchInterval);
+          return;
+        }
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        const icons = ["✨", "🌟", "💫", "🚀", "🌎", "🌙"];
+        heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => {
+          if(heart.parentNode) heart.remove();
+        }, 3000);
+      }, 400);
+
+      document.getElementById("bg-music").play().catch(e => console.error("Audio play failed:", e));
+    }
+
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confetti = Array.from({ length: 150 }).map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 5 + 2,
+      dx: Math.random() - 0.5,
+      dy: Math.random() * 1.5 + 0.5,
+      color: `hsl(${Math.random() * 60 + 200}, 100%, 75%)` // Blue to purple/white hues
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+        c.x += c.dx;
+        c.y += c.dy;
+        if (c.y > canvas.height) {
+          c.y = -c.r;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(draw);
+    }
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    draw();
+  </script>
+</body>
+</html>
