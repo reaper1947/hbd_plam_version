@@ -271,19 +271,16 @@
         currentBatch++;
       }
 
-      // สลับ batch ทุก 4 วินาที
       showBatch();
       const batchInterval = setInterval(showBatch, 4000);
 
-      // ข้อความรัก
       const loveText = document.createElement("div");
       loveText.className = "love-text";
-      loveText.innerText = "❤️ เค้ารักเธอนะ Mew ❤️";
+      loveText.innerText = "17317071 :)";
       popup.appendChild(loveText);
 
       document.body.appendChild(popup);
 
-      // Hearts floating
       const heartInterval = setInterval(() => {
         if (!document.body.contains(popup)) {
           clearInterval(heartInterval);
