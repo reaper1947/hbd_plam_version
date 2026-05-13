@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>A Special Surprise</title>
+  <title>Happy Birthday To Mew 🎂</title>
   <style>
     body {
       margin: 0;
@@ -170,11 +170,12 @@
 </head>
 <body>
   <div class="card">
-    <h1>✨ A Special Surprise ✨</h1>
+    <h1>🎉 Happy Birthday To Mew! 🎉</h1>
     <p>
-      For you!<br>
-      Sit back and enjoy the universe.<br>
-      You are out of this world! 🚀
+      สุขสันต์วันเกิดนะครับหนูมิว ❤️<br>
+      โตขึ้นอีกปีแล้ว ขอให้อีก 7 เดือนที่เหลือ<br>
+      ขอให้หนูมีรอยยิ้ม มีความสุข และสุขภาพแข็งแรง<br>
+      และได้รับความรักจากทุกคนเยอะๆเลยนะ 🎂
     </p>
     <button class="btn" onclick="showSurprise()">Click Me 🌌</button>
   </div>
@@ -213,7 +214,7 @@
         for (let i = 0; i < batchSize; i++) {
           const index = (currentBatch * batchSize + i) % totalImages + 1;
           const img = document.createElement("img");
-          img.src = `img/photo${index}.jpg`;
+          img.src = \`img/photo\${index}.jpg\`;
           img.style.top = Math.random() * 60 + 10 + "%";
           img.style.left = Math.random() * 60 + 10 + "%";
           img.style.animationDuration = (6 + Math.random() * 6) + "s";
@@ -264,7 +265,7 @@
       r: Math.random() * 5 + 2,
       dx: Math.random() - 0.5,
       dy: Math.random() * 1.5 + 0.5,
-      color: `hsl(${Math.random() * 60 + 200}, 100%, 75%)` // Blue to purple/white hues
+      color: \`hsl(\${Math.random() * 60 + 200}, 100%, 75%)\` // Blue to purple/white hues
     }));
 
     function draw() {
